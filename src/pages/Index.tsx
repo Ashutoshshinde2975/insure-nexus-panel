@@ -1,5 +1,4 @@
 
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,7 +31,7 @@ const Index = () => {
               variant="outline" 
               size="lg" 
               className="w-full" 
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/dashboard")}
             >
               Login to Dashboard
             </Button>
