@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { toast } from "sonner";
 import { 
@@ -90,7 +89,12 @@ const ClaimProcessing = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       setClaims(claims.map(claim => 
-        claim.id === selectedClaim.id ? { ...claim, status: "rejected", updatedAt: new Date() } : claim
+        claim.id === selectedClaim.id ? { 
+          ...claim, 
+          status: "rejected", 
+          updatedAt: new Date(),
+          rejectionReason: rejectionReason
+        } : claim
       ));
       
       setIsViewClaimOpen(false);

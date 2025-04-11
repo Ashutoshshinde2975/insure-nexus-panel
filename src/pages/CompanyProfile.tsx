@@ -1,17 +1,29 @@
-
 import { useState } from "react";
 import { toast } from "sonner";
-import { Shield, AtSign, Phone, MapPin, Globe, Hash, Calendar, AlertCircle } from "lucide-react";
+import { Shield, AtSign, Phone, MapPin, Globe, Hash, Calendar, AlertCircle, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FileUpload } from "@/components/ui/file-upload";
 import { mockCompanyProfile, mockCompanyDocuments } from "@/data/mockData";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const CompanyProfile = () => {
   const [uploading, setUploading] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedProfile, setEditedProfile] = useState({ ...mockCompanyProfile });
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   
   const handleLogoUpload = async (file: File | null) => {
     if (!file) return;
@@ -28,12 +40,36 @@ const CompanyProfile = () => {
       setUploading(false);
     }
   };
+
+  const handleEditProfile = () => {
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Update the mock data locally for demo purposes
+      // In a real app, this would be an API call
+      toast.success("Profile updated successfully");
+      setIsEditDialogOpen(false);
+    } catch (error) {
+      toast.error("Failed to update profile");
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setEditedProfile(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
   
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Company Profile</h1>
-        <Button>Edit Profile</Button>
+        <Button onClick={handleEditProfile}>Edit Profile</Button>
       </div>
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
@@ -305,6 +341,92 @@ const CompanyProfile = () => {
           </TabsContent>
         </div>
       </Tabs>
+
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl">Edit Company Profile</DialogTitle>
+            <DialogDescription>
+              Update your company information
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Company Name</label>
+              <Input 
+                value={editedProfile.companyName} 
+                onChange={(e) => handleInputChange('companyName', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">IRDAI License Number</label>
+              <Input 
+                value={editedProfile.irdaiLicenseNumber} 
+                onChange={(e) => handleInputChange('irdaiLicenseNumber', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Contact Person</label>
+              <Input 
+                value={editedProfile.contactPerson} 
+                onChange={(e) => handleInputChange('contactPerson', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Email</label>
+              <Input 
+                type="email"
+                value={editedProfile.email} 
+                onChange={(e) => handleInputChange('email', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Phone</label>
+              <Input 
+                value={editedProfile.phone} 
+                onChange={(e) => handleInputChange('phone', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Website (optional)</label>
+              <Input 
+                value={editedProfile.website || ''} 
+                onChange={(e) => handleInputChange('website', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-sm font-medium">Business Address</label>
+              <Textarea 
+                value={editedProfile.address} 
+                onChange={(e) => handleInputChange('address', e.target.value)} 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">GSTIN (optional)</label>
+              <Input 
+                value={editedProfile.gstin || ''} 
+                onChange={(e) => handleInputChange('gstin', e.target.value)} 
+              />
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveProfile}>
+              <Save className="h-4 w-4 mr-2" />
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
