@@ -10,7 +10,7 @@ export interface PolicyDocument extends Document, Omit<IPolicy, 'id'> {
 
 const PolicySchema = new Schema<PolicyDocument>(
   {
-    companyId: { type: Schema.Types.ObjectId, ref: 'Company', required: true },
+    companyId: { type: String, required: true },
     policyName: { type: String, required: true },
     type: { type: String, enum: ['Health', 'Auto', 'Home'], required: true },
     premium: { type: Number, required: true },
